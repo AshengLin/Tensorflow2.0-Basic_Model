@@ -13,8 +13,8 @@ x_train = x_train.reshape((60000, 28, 28, 1))  # 灰階
 
 
 cnn_model = keras.Sequential(name='CNN')
-cnn_model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
-cnn_model.add(layers.MaxPooling2D((2, 2)))
+cnn_model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))  # 目的為萃取輪廓邊界
+cnn_model.add(layers.MaxPooling2D((2, 2)))  # 目的為當圖片些微平移時不會造成影響，抗雜訊
 
 cnn_model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 cnn_model.add(layers.MaxPooling2D((2, 2)))
