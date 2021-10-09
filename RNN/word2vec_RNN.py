@@ -49,3 +49,4 @@ rnn_model.compile(optimizer='Adam',
 
 rnn_model.fit(x_train, y_train.values, epochs=20)
 predict_y = rnn_model.predict_classes(x_train)
+rnn_model.evaluate(x_train, y_train.values)
