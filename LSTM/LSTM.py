@@ -22,16 +22,19 @@ embedding_matrix = w2v.wv.vectors
 embedding_matrix = np.vstack((np.array(np.zeros(250)), embedding_matrix))  # 補一個padding 0用的vector
 # print(embedding_matrix.shape)
 
-x_train = np.zeros([len(data_waimai.text), 30], dtype='float64')
+x_all = np.zeros([len(data_waimai.text), 30], dtype='float64')
 for i in range(len(data_waimai.text)):
     for j in range(min(len(data_waimai.text[i]), 30)):  # 最多30就好 統一長度
-        x_train[i, j] = 1 + w2v.wv.key_to_index[data_waimai.text[i][j]]  # 加1為了之後padding的0
-y_train = data_waimai.label
+        x_all[i, j] = 1 + w2v.wv.key_to_index[data_waimai.text[i][j]]  # 加1為了之後padding的0
+y_all = data_waimai.label
+
+x_train, x_test = x_all[:10000], x_all[10000:]
+y_train, y_teat = y_all[:10000], y_all[10000:]
 
 
 lstm_model = tf.keras.Sequential(name='LSTM')
 lstm_model.add(layers.Embedding(len(w2v.wv) + 1, 250))  # 記得1要加
-lstm_model.add(layers.LSTM(30))
+lstm_model.add(layers.LSTM(64))
 lstm_model.add(layers.Dense(2, activation='softmax'))
 
 if os.path.exists('lstm_model.png'):
@@ -43,5 +46,5 @@ lstm_model.compile(optimizer='Adam',
                    metrics=['accuracy'])
 
 lstm_model.fit(x_train, y_train.values, epochs=20)
-predict_y = lstm_model.predict_classes(x_train)
-lstm_model.evaluate(x_train, y_train.values)
+predict_y = lstm_model.predict_classes(x_test)
+lstm_model.evaluate(x_test, y_teat.values)
